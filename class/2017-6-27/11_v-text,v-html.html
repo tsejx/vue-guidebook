@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <div id="app">
+    <input type="button" value="按钮"/>
+    <!-- <div> {{text}} </div> -->
+    <div v-text="text"></div>
+<!--     <div>
+      <span>你好!世界!~</span>
+    </div> -->
+    <div v-html="text"></div>
+  </div>
+<script src="src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+  /*
+
+    中文React
+      https://discountry.github.io/react/
+
+    给元素内部添加文本内容的方式：(v-text="数据")
+      类似innerText
+    1.<div> {{text}} </div>
+    2.<div v-text="text"></div>
+
+    v-html:
+      类似innerHTML
+    给元素内部添加数据，数据包括，文本，结构
+
+
+  */
+  new Vue({
+    el:'#app',
+    data:{
+      text:'<span>你好!世界!~</span>'
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>声明式渲染</title>
+</head>
+<body>
+<div class="" id="app">
+  <p v-if="seen">现在看到我了</p>
+</div>
+
+<div class="" id="app2">
+  <ul>
+    <li v-for="todo in todos">
+      {{todo.text}}
+    </li>
+  </ul>
+</div>
+
+
+  <script src="../src/vue.js"></script>
+  <script>
+    var app = new Vue({
+      el:'#app',
+      data:{
+        seen:true
+      }
+    })
+
+    var app2 = new Vue({
+      el:'#app2',
+      data:{
+        todos:[
+          {text:'学习 Javacript'},
+          {text:'学习 Vue'},
+          {text:'整个牛项目'}
+        ]
+      }
+    })
+
+
+
+
+  </script>
+</body>
+</html>

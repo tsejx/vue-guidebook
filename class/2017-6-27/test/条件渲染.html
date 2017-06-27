@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <ul v-if="arr.length >= 4">
+      <li v-for="val,key in arr">
+       <p>{{key}}</p>
+       <span>{{val.name}}说</span>
+       <span>我芳龄：{{val.age}}</span>
+      </li>
+    </ul>
+  </div>
+  <script src="../src/vue.js" charset="utf-8"></script>
+  <script>
+    let arr = [
+      {
+        name:'成龙',
+        age:90
+      },
+      {
+        name:'章子怡',
+        age:50
+      },
+      {
+        name:'汪峰',
+        age:80
+      }
+    ]
+
+    let obj = {
+      name:'Fq'
+    }
+
+    var v = new Vue({
+      el:"#app",
+      data:{
+        arr
+      }
+    })
+  </script>
+</body>
+</html>

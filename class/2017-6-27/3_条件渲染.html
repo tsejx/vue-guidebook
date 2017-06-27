@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <div class="box">
+    <ul v-if="arr.length >= 3">
+      <li v-for="val,key in arr">
+        <span>{{val.name}}说:</span>
+        <span>我芳龄：{{val.age}}</span>
+      </li>
+    </ul>
+  </div>
+<script src="src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+  
+  /*
+    判断
+      v-if="条件"
+      v-else
+      else-if
+      
+      
+  */
+  
+  let arr = [
+    {
+      name:'付强',
+      age:90
+    },
+    {
+      name:'老王',
+      age:1000
+    }
+  ];
+  
+  let v = new Vue({
+    el:'.box',
+    data:{
+      arr
+    }
+  });
+  
+  setTimeout(function(){
+    v.arr.push({
+      name:'刘胖纸',
+      age:18
+    });
+  },2000);
+  
+  
+</script>
+</body>
+</html>

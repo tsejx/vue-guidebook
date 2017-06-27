@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <div id="app">
+    {{name}}
+  </div>
+<script src="src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+  /*
+    MVC:
+      Modle   数据
+      View    视图
+      controller 控制器
+      
+    Vue：
+        MVVM框架
+      
+      vm：
+        ViewModle（可以双向数据绑定，修改视图会影响数据，操作数据会影响视图）
+        
+    学思想、基本语法、指令、props、如何操作数据的。
+    
+    React 学思想 、state 、 props
+        
+  */
+  
+  new Vue({
+    el:'#app',
+    data:{
+      name:'你好!世界!'
+    }
+  });
+  
+ 
+</script>
+</body>
+</html>

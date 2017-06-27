@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+<style media="screen">
+#div1{
+  width:100px;
+  height: 100px;
+  background: pink;
+}
+#div2{
+  width:100px;
+  height: 100px;
+  background:skyblue;
+}
+#div3{
+  width:100px;
+  height: 100px;
+  background:yellow;
+}
+</style>
+</head>
+<body>
+  <div class="box">
+    <button @click="click">a</button>
+    <button @click="click">b</button>
+    <button @click="click">c</button>
+    <div id="div1" v-show="onOff == 'a'"></div>
+    <div id="div2" v-show="onOff == 'b'"></div>
+    <div id="div3" v-show="onOff == 'c'"></div>
+  </div>
+<script src="../src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+    let v = new Vue({
+      el:".box",
+      data:{
+        onOff:'a'
+      },
+      methods:{
+        click(e){
+          this.onOff = e.target.innerText
+        }
+      }
+    })
+</script>
+</body>
+</html>

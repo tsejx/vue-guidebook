@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+<style media="screen">
+  #div1{
+    width:100px;
+    height: 100px;
+    background: red;
+  }
+  #div2{
+    width:50px;
+    height: 50px;
+    background: yellow;
+  }
+</style>
+</head>
+<body>
+  <div id="box">
+      
+    <div id="div1" @click="click">
+      <div id="div2" @click.stop="click1"></div>
+    </div>
+    <img src="img1.jpg" alt="" width="100" @mousedown.prevent="keydown">
+    
+  </div>
+<script src="src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+  /*
+    修饰符：
+      .13
+      .enter
+      .stop:阻止冒泡
+        等同于event.stopPropagation()
+      .once:
+        只触发一次
+      .prevent:阻止默认行为
+      .left - (2.2.0) 只当点击鼠标左键时触发。
+      .right - (2.2.0) 只当点击鼠标右键时触发。
+      .middle - (2.2.0) 只当点击鼠标中键时触发。
+      
+      其实是可以串联写的，比如：
+        <button @click.stop.prevent="doThis"></button>
+      别的串联慎用!!!
+      
+  */
+ 
+  new Vue({
+    el:'#box',
+    data:{
+      arr:[
+        {
+          name:'付强',
+          age:90
+        },
+        {
+          name:'老王',
+          age:1000
+        }
+      ]
+    },
+    methods:{
+      click1(ev){
+        alert('我是小的div');
+      //  ev.cancelBubble = true;
+      },
+      click(){
+        alert('我是大的div');
+      },
+      keydown(ev){
+        console.log(1);
+        //ev.preventDefault();
+      }
+      
+    }
+  });
+</script>
+</body>
+</html>

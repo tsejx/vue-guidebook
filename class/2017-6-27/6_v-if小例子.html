@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+<style media="screen">
+#div1{
+  width:100px;
+  height: 100px;
+  background: red;
+}
+#div2{
+  width:100px;
+  height: 100px;
+  background:blue;
+}
+#div3{
+  width:100px;
+  height: 100px;
+  background:pink;
+}
+</style>
+</head>
+<body>
+  <div class="box">
+    <button @click="click">a</button>
+    <button @click="click">b</button>
+    <button @click="click">c</button>
+    <div id="div1" v-if="onOff == 'a'"></div>
+    <div id="div2" v-else-if="onOff == 'b'"></div>
+    <div id="div3" v-else></div>
+  </div>
+<script src="src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+  
+  /*
+    判断
+      v-if="条件"
+      v-else-if="条件二"
+      v-else(注意的是必须跟在if或者else-if的后面)
+      
+      注意：
+        如果是通过v-if频繁操作DOM，那么是不推荐使用的。
+      
+  */
+  let v = new Vue({
+    el:'.box',
+    data:{
+      onOff:'a'
+    },
+    methods:{
+      click(ev){
+        //this都为Vue这个对象
+        //alert(ev.target.innerText);
+        this.onOff = ev.target.innerText;
+      }
+    }
+  });
+  
+  
+</script>
+</body>
+</html>

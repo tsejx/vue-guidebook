@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+<style media="screen">
+#div1{
+  width:100px;
+  height: 100px;
+  background: red;
+}
+#div2{
+  width:100px;
+  height: 100px;
+  background:blue;
+}
+</style>
+</head>
+<body>
+  <div class="box">
+    <button v-on:click="onOff = !onOff">点击</button>
+    <div id="div1" v-if="onOff"></div>
+    <div id="div2" v-else></div>
+  </div>
+<script src="src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+  
+  /*
+    判断
+      v-if="条件"
+      v-else(注意的是必须跟在if或者else-if的后面)
+      v-else-if
+      
+      
+  */
+  let v = new Vue({
+    el:'.box',
+    data:{
+      onOff:false
+    }
+  });
+  
+  
+</script>
+</body>
+</html>

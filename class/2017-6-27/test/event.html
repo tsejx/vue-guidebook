@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <div class="box">
+    <ul>
+      <li v-for="val,key in arr" @click="click(val,$event)">
+        <span>{{val.name}}说</span>
+        <span>我芳龄：{{val.age}}</span>
+      </li>
+    </ul>
+  </div>
+<script src="../src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+    let v = new Vue({
+      el:".box",
+      data:{
+        arr:[{
+          name:'老大',
+          age:29
+        },
+        {
+          name:'老二',
+          age:26
+        },
+        {
+          name:'老三',
+          age:22
+        }
+      ]
+    },
+      methods:{
+        click(val,ev){
+          if (val.name == '老二') {
+            e.target.parentNode.style.background = 'red';
+          }
+        }
+      }
+    });
+
+
+</script>
+</body>
+</html>

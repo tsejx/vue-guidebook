@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style main="screen">
+    .red{
+      background-color: red;
+    }
+    .green{
+      background-color: green;
+    }
+    #pdd{
+      width: 100px;
+      height: 100px;
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <input type="button" value="按钮变红" @click="changeRed"/>
+  <input type="button" value="按钮变绿" @click="changeGreen"/>
+  <div id="pdd" :class="{'green':green,'red':red}"></div>
+</div>
+<script src="../src/vue.js" charset="utf-8"></script>
+<script type="text/javascript">
+  new Vue({
+    el:'#app',
+    data:{
+      text:'<span>你好!世界!~</span>',
+      // redone:'red',
+      red:false,
+      green:false
+    },
+    methods:{
+      changeRed(){
+        this.green = false;
+        this.red = true;
+      },
+      changeGreen(){
+        this.green = true;
+        this.red = false;
+      }
+    }
+  });
+</script>
+</body>
+</html>
