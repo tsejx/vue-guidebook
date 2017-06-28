@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <div class="app">
+    <input type="button" value="点击增加" @click="++num"/>
+    <input type="button" value="点击才触发" @click="click"/>
+    {{toDouNum}}
+    {{toDouNum}}
+    {{toDouNum}}
+    {{toDouNum}}
+    <p>  {{toDouNum}} </p>
+    <span>{{toDouNum}}</span>
+  </div>
+<script src="src/vue.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*
+  vue对比别的框架：
+    https://cn.vuejs.org/v2/guide/comparison.html
+    
+    计算属性：
+      当data中的某项（些）数据发生变化的时候，就会触发这个属性
+      
+      当页面第一次渲染的时候就会触发一次，再改变数据的时候也会触发(前提条件是这个计算属性被使用)。
+      
+      与methods中函数的区别：
+        methods中函数只有调用(直接调用,事件调用)才会触发
+        计算属性：
+          只要数据发生变化就会触发。
+          
+      如果要使用计算属性，那么在完成计算之后把结果return出去即可
+        
+      
+      
+    
+*/
+  new Vue({
+    el:'.app',
+    data:{
+      num:0
+    },
+    methods:{
+      click(){
+        function touDou(n){
+          return n < 10?'0'+n:''+n;
+        }
+        console.log(touDou(this.num))
+      }
+    },
+    computed:{
+      toDouNum(){
+        function touDou(n){
+          return n < 10?'0'+n:''+n;
+        }
+        console.log('只要数据发生变化就触发');
+        return touDou(this.num);
+      }
+    }
+  });
+ 
+</script>
+</body>
+</html>

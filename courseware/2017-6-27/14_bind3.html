@@ -26,29 +26,27 @@
 <script src="src/vue.js" charset="utf-8"></script>
 <script type="text/javascript">
   /*
-    
+
     v-bind:(缩写:)
       动态地绑定一个或多个特性，或一个组件 prop 到表达式。
-      
+
     v-bind:class="red"
     这个red为data中的数据
-    
+
     :class="red"
-    
+
     :class="{'className':boolean}"只要是true 类名就 会显示，否则不会显示
-    
+
     多种状态，那么可以那么写：
         :class="{'red':boolean,'green':boolean}"
-        
+
     数组的语法：
       :class="[redone,greenone]";
-      
+
       redone或者greenone为data中的数据。
-      
+
       也可以数组中包对象：
         :class="[{'red':true},greenone]"
-    
-    
   */
   new Vue({
     el:'#app',

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <div class="app" >
+    <button @click="++num">这是父级的num:{{num}}</button>
+    
+    <my-hezi  :num="num" @change="changeNum"></my-hezi>
+  </div>
+<script src="src/vue.js" type="text/javascript"></script>
+<script type="text/javascript">
+  
+  /*
+    子组件传递父组件：
+      通过自定义事件来操作：
+        this.$emit(自定义的事件名,回调);
+    
+    父级的数据传递给了子级，子级是不能直接修改父级的数据(按理来说，数据是父级的,子级拿到一般只是渲染
+    ,在vue中，虽然修改有效，但是报错)
+    
+    解决方案：
+      1.首先把父级的数据变成自己的数据，
+        data(){
+          return {
+            num:this.num //props.num
+          }
+        }
+      
+      2.把父组件的数据，变为自己的，只会执行一次，如果变成了自己的，那么父级的数据更新之后，是不会
+      影响子组件的数据的。
+      
+      3.修改子组件的数据，在子组件的事件函数中，定义一个自定义事件（this.$emit(自定义的事件名,回调)）
+      
+      4.给父级绑上这个子组件的自定义事件赋值为父组件的事件函数  
+  
+  */
+  
+  //子组件
+  Vue.component('my-hezi',{
+    props:['num'],
+    template:`
+      <div>
+          <button @click="childChange">子组件的num {{number}}</button>
+      </div>`,
+    data(){
+      return {
+        number:this.num
+      }
+    },
+    methods:{
+      childChange(){
+      //  console.log(1234);
+        this.number = ++this.number;
+        console.log(this.number)
+        this.$emit('change',this.number);
+      }
+    }
+      
+  });
+
+  //根组件
+  new Vue({
+    el:'.app',
+    data:{
+      num:0
+    },
+    methods:{
+      changeNum(newVal){
+        //
+        //console.log(newVal);
+        this.num = newVal;
+      }
+    }
+  });
+  
+
+  
+
+</script>
+</body>
+</html>
