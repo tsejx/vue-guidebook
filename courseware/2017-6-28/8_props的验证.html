@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <div class="app">
+    <button @click="++num">点我 {{num}}</button>
+    <my-hezi name="fuqiang" :num="num"></my-hezi>
+  </div>
+<script src="src/vue.js" type="text/javascript"></script>
+<script type="text/javascript">
+  
+  /*
+      如果接收的数据为指定类型，那么props:为{}
+      {
+        接收的数据:数据类型,
+        接收的数据:[数据类型一,数据类型二]
+      }
+  */
+  
+  //子组件
+  Vue.component('my-hezi',{
+    props:{
+      name:[String],
+      num: [Number,String]
+    },
+    template:`<div>{{name}} -- {{num}}</div>`
+  });
+
+  //根组件
+  new Vue({
+    el:'.app',
+    data:{
+      num:'0'
+    }
+  });
+  
+
+  
+
+</script>
+</body>
+</html>
