@@ -1,3 +1,8 @@
 node_modules
 node_modules/
 .DS_Store
+.umi/
+.temp/
+.umi-production/
+todo.md
+dist/

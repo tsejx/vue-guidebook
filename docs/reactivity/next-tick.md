@@ -1,3 +1,11 @@
+---
+nav:
+  title: 原理
+  order: 2
+title: nextTick
+order: 4
+---
+
 # nextTick
 
 阅读此章前假设已经理解 JavaScript 的[事件循环机制](https://tsejx.github.io/JavaScript-Guidebook/core-modules/executable-code-and-execution-contexts/concurrency-model/event-loop.html)

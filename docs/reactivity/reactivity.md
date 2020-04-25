@@ -1,3 +1,11 @@
+---
+nav:
+  title: 原理
+  order: 2
+title: 响应式原理
+order: 2
+---
+
 # 响应式原理
 
 MVVM 是 Model-View-ViewModel 的简写，即 **模型-视图-视图** 模型。Model 指的是后端传递的数据。View 指的是所看到的页面。ViewModel 是 MVVM 模式的核心，它是连接 View 和 Model 的桥梁。
@@ -37,9 +45,9 @@ Vue 采用 <span style="color:red;font-weight:bold">数据劫持</span> 结合 <
 
 * **Watcher 是发布订阅者模型中的订阅者：**订阅的数据改变时执行相应的回调函数（更新视图或表达式的值）。一个 Watcher 可以更新视图，如 HTML 模板中用到的 `{{test}}`，也可以执行一个 `$watch` 监督的表达式的回调函数（Vue 实例中的 watch 项底层是调用的 `$watch` 实现的），还可以更新一个计算属性（即 Vue 实例中的 `computed` 项）。
 
-![Vue 的 MVVM 实现流程图](../snapshot/mvvm-in-vue.jpg)
+![Vue 的 MVVM 实现流程图](../assets/mvvm-in-vue.jpg)
 
-## Observer 
+## Observer
 
 > Observer 类用于附加到每个被观察的对象。一旦附加后，观察者会将目标对象的 Property 键转换成用于**收集依赖**以及**调度更新**的 getters 和 setters。
 
@@ -55,20 +63,20 @@ Vue 采用 <span style="color:red;font-weight:bold">数据劫持</span> 结合 <
 function defineReactive(obj, key, val) {
   // 每个字段的 Dep 实例都被用于收集那些属于对应字段的依赖
   const dep = new Dep()
-  
+
   const property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
     return
   }
-  
+
   const getter = property && property.get
   const setter = property && property.set
   if ((!getter || setter) && arguments.length === 2 ) {
     val = obj[key]
   }
-  
+
   let childOb = !shallow && observe(val)
-  
+
   Object.defineProperty(obj, key, {
     enumerble: true,
     configurable: true,
@@ -90,11 +98,11 @@ function defineReactive(obj, key, val) {
     },
     set: function reactiveSetter() {
       const value = getter ? getter.call(obj) : val
-      
+
       if (newVal === value || (newVal !== newVal && value !== value))  {
         return
       }
-      
+
       if (getter && !setter) return
       if (setter) {
         // 如果原本对象拥有 setter 方法则执行 setter
@@ -191,7 +199,7 @@ Vue 构造函类中新建一个 Watcher 对象只需要 `new` 出来，这时候
 
 Watcher 原理通过对被观测目标的求值，触发数据的 `get` 拦截器函数从而收集依赖，至于被观测目标到底是表达式还是函数或者是其他形式的内容都不重要，重要的是被观测目标能否触发数据属性的 `get` 拦截器函数，很显然函数是具备这个能力的。
 
-前面提到 defineReactive 对数据对象进行双向绑定，该函数内部通过闭包方式实例化一个 Dep 类的对象。在对象被「读」的时候，会触发 reactiveGetter 函数把当前的 Watcher 对象（存放在 Dep.target 中）收集到  Dep 类中。之后如果当该对象「写」的时候，则会触发 reactiveSetter 方法，通知 Dep 类调用 notify 来触发所有 Watcher 对象的 update 方法更新视图。  
+前面提到 defineReactive 对数据对象进行双向绑定，该函数内部通过闭包方式实例化一个 Dep 类的对象。在对象被「读」的时候，会触发 reactiveGetter 函数把当前的 Watcher 对象（存放在 Dep.target 中）收集到  Dep 类中。之后如果当该对象「写」的时候，则会触发 reactiveSetter 方法，通知 Dep 类调用 notify 来触发所有 Watcher 对象的 update 方法更新视图。
 
 其实依赖收集的过程就是把 Watcher 实例存放到对应的 Dep 对象中去。get 方法可以让当前的 Watcher 对象（Dep.target）存放到它的 subs 中（addSub）方法，在数据变化时，set 会调用 Dep 对象的 notify 方法通知它内部所有 Watcher 对象进行视图更新。
 
@@ -210,7 +218,7 @@ updateComponent 函数的执行会间接触发渲染函数（`vm.$options.render
 
 ## 总结
 
-![Reactive](../snapshot/reactive.png)
+![Reactive](../assets/reactive.png)
 
 Vue 的响应式原理的核心就是观察这些数据的变化，当这些数据发生变化以后，能通知到对应的观察者以实现相关的逻辑。整个响应式原理最核心的实现就是 Dep 类，这个类实际上是连接数据与观察者的桥梁。
 
