@@ -4,5 +4,5 @@ node_modules/
 .umi/
 .temp/
 .umi-production/
-todo.md
 dist/
+todo/

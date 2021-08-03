@@ -14,11 +14,21 @@ Virtual DOM 可以看做一棵模拟 DOM 树的 JavaScript 树，其主要是通
 
 希望实现复杂状态的界面在数据改变时，视图产生相应的变化，反之亦然。但如果整棵 DOM 树实现代价太高，能否只更新变化的部分的视图。
 
-![基于 Virtual DOM 的数据更新与 UI 同步机制](../assets/virtual-dom-base-model.png)
+```jsx | inline
+import React from 'react';
+import img from '../assets/virtual-dom-base-model.png';
+
+export default () => <img alt="基于 Virtual DOM 的数据更新与 UI 同步机制" src={img} width={640} />;
+```
 
 初始渲染时，首先将数据渲染为 Virtual DOM，然后由 Virtual DOM 生成 DOM。
 
-![Virtual DOM 处理过程](../assets/virtual-dom-process.png)
+```jsx | inline
+import React from 'react';
+import img from '../assets/virtual-dom-process.png';
+
+export default () => <img alt="Virtual DOM 处理过程" src={img} width={640} />;
+```
 
 数据更新时，渲染得到的新的 Virtual DOM，与上次得到的 Virtual DOM 进行 Diff，得到所需要的在 DOM 上进行变更，然后在 patch 过程应用到 DOM 上实现 UI 的同步更新。
 
@@ -80,7 +90,12 @@ Virtual DOM 作为数据结构，需要能准确地转换为真实 DOM，并且�
 
 patch 的核心 diff 算法，diff 算法通过同层的树节点进行比较而非
 
-![old-vnode-and-new-vnode-diff](../assets/old-and-new-diff.jpg)
+```jsx | inline
+import React from 'react';
+import img from '../assets/old-and-new-diff.jpg';
+
+export default () => <img alt="old-vnode-and-new-vnode-diff" src={img} width={640} />;
+```
 
 只在同层级的 VNode 之间进行比较得到变化，然后修改变化的视图。
 
@@ -144,7 +159,12 @@ oldStartVnode、oldEndVnode 与 newStartVnode、newEndVnode 两两比较共有�
 
 当然也有可能 newStartVnode 在旧的 VNode 节点找不到一致的 key，或者是即便 key 相同却不是 sameVnode，这个时候会调用 createElm 创建一个新的 DOM 节点。
 
-![Virtual DOM Analysis](../assets/virtual-dom-analysis.jpg)
+```jsx | inline
+import React from 'react';
+import img from '../assets/virtual-dom-analysis.jpg';
+
+export default () => <img alt="Virtual DOM Analysis" src={img} width={640} />;
+```
 
 新旧节点分别有两个指针，分别指向各自的头部节点和尾部节点。
 
@@ -170,7 +190,12 @@ Vue 为平台做了一层适配层，不同平台之间通过适配层对外提�
 
 依赖虚拟 DOM 的生命周期函数。虚拟 DOM 提供如下的钩子函数，分别在不同的时期会进行调用。
 
-![Virtual DOM](../assets/virtual-dom.jpg)
+```jsx | inline
+import React from 'react';
+import img from '../assets/virtual-dom.jpg';
+
+export default () => <img alt="Virtual DOM" src={img} width={640} />;
+```
 
 1. VNode 是基础数据结构
 2. Patch 创建或更新 DOM 树

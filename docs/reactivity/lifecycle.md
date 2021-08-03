@@ -10,11 +10,21 @@ order: 1
 
 生命周期并非指 Vue 中的生命周期钩子，而是指 Vue 内部从初始化到挂载 DOM 的完整流程。
 
-![Vue Lifecycle](../assets/vue-lifecycle.jpg)
+```jsx | inline
+import React from 'react';
+import img from '../assets/vue-lifecycle.jpg';
+
+export default () => <img alt="Vue Lifecycle" src={img} width={640} />;
+```
 
 ## 初始化
 
-![initialize](../assets/lifecycle-initialize.jpg)
+```jsx | inline
+import React from 'react';
+import img from '../assets/vue-lifecycle.jpg';
+
+export default () => <img alt="Initialize" src={img} width={640} />;
+```
 
 在 `new Vue()` 之后。Vue 会调用挂载在其原型上的 `_init` 函数进行初始化，也就是这里的 init 过程，它会初始化生命周期、事件、props、methods、data、computed 与 watch 等。其中最重要的是通过 `Object.defineProperty` 设置 `setter` 与 `getter` 函数，用来实现<span style="color:red;font-weight:bold">响应式</span>以及<span style="color:red;font-weight:bold">依赖收集</span>。
 
@@ -24,7 +34,12 @@ order: 1
 
 编译（Compiler）可以分成 Parse、Optimize 与 Generate 三个阶段，最终需要得到 render function。
 
-![Compile](../assets/lifecycle-compile.jpg)
+```jsx | inline
+import React from 'react';
+import img from '../assets/lifecycle-compile.jpg';
+
+export default () => <img alt="Compile" src={img} width={640} />;
+```
 
 ### Parse
 
@@ -42,13 +57,23 @@ Generate 是将 AST 转化成 render function 字符串的过程，得到结果�
 
 ## 响应式
 
-![Reactive](../assets/lifecycle-reactive.jpg)
+```jsx | inline
+import React from 'react';
+import img from '../assets/lifecycle-reactive.jpg';
+
+export default () => <img alt="Reactive" src={img} width={640} />;
+```
 
 在 init 过程中通过 Object.defineProperty 对响应式数据的 getter 和 setter 进行绑定，它使得当被设置的对象被读取的时候会执行 getter 函数，而在当被赋值的时候会执行 setter 函数。
 
 当 render function 被渲染的时候，因为会读取所需对象的值，所以会触发 getter 函数进行<span style="color:red;font-weight:bold">依赖收集</span>，依赖收集的目的是将观察者 Watcher 对象存放到当前闭包中的订阅者 Dep 的 subs 中。
 
-![Lifecycle Dep](../assets/lifecycle-dep.jpg)
+```jsx | inline
+import React from 'react';
+import img from '../assets/lifecycle-dep.jpg';
+
+export default () => <img alt="Lifecycle Dep" src={img} width={640} />;
+```
 
 在修改对象的值时候，会触发 setter，setter 通知之前依赖收集得到的 Dep 中的每个 Watcher，告诉它们自己的值改变了，需要重新渲染视图。这时候这些 Watcher 就会开始调用 update 来更新视图，当然这中间还有一个 patch 过程以及使用队列来异步更新的策略。
 
@@ -104,5 +129,4 @@ Vue 生命周期总结：
 
 **参考资料：**
 
-* [📝 Vue 的响应式原理](https://github.com/answershuto/learnVue/blob/master/docs/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86.MarkDown)
-
+- [📝 Vue 的响应式原理](https://github.com/answershuto/learnVue/blob/master/docs/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86.MarkDown)
