@@ -4,9 +4,9 @@
   "description": "A technical mannual about Vue knowledge",
   "main": "index.js",
   "scripts": {
-    "start": "yarn run dev",
-    "dev": "yarn run dumi dev --port=8050",
-    "build": "yarn  run dumi build",
+    "start": "npm run dev",
+    "dev": "dumi dev --port=8050",
+    "build": "dumi build",
     "deploy": "bash ./scripts/deploy.sh"
   },
   "repository": {

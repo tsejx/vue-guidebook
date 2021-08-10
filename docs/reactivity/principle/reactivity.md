@@ -48,7 +48,7 @@ Vue 采用 <span style="color:red;font-weight:bold">数据劫持</span> 结合 <
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/mvvm-in-vue.jpg';
+import img from '../../assets/mvvm-in-vue.jpg';
 
 export default () => <img alt="Vue 的 MVVM 实现流程图" src={img} width={640} />;
 ```
@@ -165,7 +165,7 @@ class Dep {
 
   /* 通知所有Watcher对象更新视图 */
   notify() {
-    this.subs.forEach(sub => {
+    this.subs.forEach((sub) => {
       sub.update();
     });
   }
@@ -226,7 +226,7 @@ updateComponent 函数的执行会间接触发渲染函数（`vm.$options.render
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/reactive.png';
+import img from '../../assets/reactive.png';
 
 export default () => <img alt="Reactive" src={img} width={640} />;
 ```

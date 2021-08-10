@@ -2,6 +2,9 @@
 nav:
   title: 原理
   order: 2
+group:
+  title: 框架原理
+  order: 1
 title: 生命周期
 order: 1
 ---
@@ -12,7 +15,7 @@ order: 1
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/vue-lifecycle.jpg';
+import img from '../../assets/vue-lifecycle.jpg';
 
 export default () => <img alt="Vue Lifecycle" src={img} width={640} />;
 ```
@@ -21,7 +24,7 @@ export default () => <img alt="Vue Lifecycle" src={img} width={640} />;
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/vue-lifecycle.jpg';
+import img from '../../assets/vue-lifecycle.jpg';
 
 export default () => <img alt="Initialize" src={img} width={640} />;
 ```
@@ -36,7 +39,7 @@ export default () => <img alt="Initialize" src={img} width={640} />;
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/lifecycle-compile.jpg';
+import img from '../../assets/lifecycle-compile.jpg';
 
 export default () => <img alt="Compile" src={img} width={640} />;
 ```
@@ -59,7 +62,7 @@ Generate 是将 AST 转化成 render function 字符串的过程，得到结果�
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/lifecycle-reactive.jpg';
+import img from '../../assets/lifecycle-reactive.jpg';
 
 export default () => <img alt="Reactive" src={img} width={640} />;
 ```
@@ -70,7 +73,7 @@ export default () => <img alt="Reactive" src={img} width={640} />;
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/lifecycle-dep.jpg';
+import img from '../../assets/lifecycle-dep.jpg';
 
 export default () => <img alt="Lifecycle Dep" src={img} width={640} />;
 ```

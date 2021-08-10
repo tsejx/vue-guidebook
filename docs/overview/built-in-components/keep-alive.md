@@ -5,8 +5,8 @@ nav:
 group:
   title: 内置组件
   order: 5
-title: keep-alive
+title: KeepAlive
 order: 1
 ---
 
-# keep-alive
+# KeepAlive

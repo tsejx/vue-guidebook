@@ -1,7 +1,10 @@
 ---
 nav:
-  title: 编译
-  order: 3
+  title: 原理
+  order: 2
+group:
+  title: 代码编译
+  order: 2
 title: 代码编译
 order: 1
 ---
