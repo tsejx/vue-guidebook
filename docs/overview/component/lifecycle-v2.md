@@ -1,12 +1,15 @@
 ---
 nav:
-  title: 用法
+  title: 基础
   order: 1
-title: 生命周期
-order: 4
+group:
+  title: 组件化
+  order: 2
+title: 生命周期 v2
+order: 2
 ---
 
-# 生命周期
+# 生命周期 v2
 
 **生命周期**：就是从一个组件或实例开始初始化、创建实例到该实例被销毁的过程。
 
@@ -23,7 +26,9 @@ import img from '../../assets/lifecycle.png';
 export default () => <img alt="Vue生命周期" src={img} width={520} />;
 ```
 
-## create
+## 钩子函数
+
+### create
 
 **实例化 Vue 阶段。**
 
@@ -41,7 +46,7 @@ export default () => <img alt="Vue生命周期" src={img} width={520} />;
 
 > 💡 优先级：render 选项 > template 选项 > outerHTML
 
-## mount
+### mount
 
 开始挂载前，会先执行钩子函数 <span style="color:red;font-weight:bold">beforeMount</span>，编译 `template` 里的内容并在虚拟 DOM 中执行，页面上依旧没有任何展示。
 
@@ -49,23 +54,23 @@ export default () => <img alt="Vue生命周期" src={img} width={520} />;
 
 ⚠️ **注意**：`created` 阶段的网络请求与 `mounted` 请求的区别：前者页面视图未出现，如果请求信息过多，页面会长时间处于白屏状态。
 
-## update
+### update
 
 当数据产生变化，会进入更新周期函数并先调用 <span style="color:red;font-weight:bold">beforeUpdate</span>，这个钩子中可进一步修改 `$vm.data`，但是不会触发附加的重渲染过程。然后经过新旧对比产生新的 VirtualDOM 并进行重渲染，更新完成后将调用 `updated` 钩子函数。
 
 当 <span style="color:red;font-weight:bold">updated</span> 钩子调用时，组件 DOM 的 `data` 已经更新，所以你现在可以执行依赖于 DOM 的操作。但是不要在此时修改 `data`，否则会再次触发 `beforeUpdate`、`updated` 这个两个钩子，导致进入死循环。
 
-## destroy
+### destroy
 
 <span style="color:red;font-weight:bold">beforeDestroy</span> 钩子函数在实例销毁钱调用，在这步，实例仍然可用。
 
 beforeDestroyed 钩子函数在 Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。
 
-## activated & deactivated
+### activated & deactivated
 
 为 keep-alive 组件定制的钩子函数。
 
-## 捕捉错误
+### renderError
 
 在这个过程当中，Vue 为我们提供了 `renderError` 方法，这个方法只有在开发的时候才会被调用，在正式打包上线过程当中，它是不会被调用的。它主要是帮助我们调试 `render` 里面的一些错误。
 
@@ -92,7 +97,7 @@ renderError(h, err){
 | beforeDestroy | 实例销毁之前调用。这一步，实例仍然完全可用，`this` 仍能获取到实例引用                                                               | 常用于销毁定时器、解绑全局事件、销毁插件对象等操作           |
 | destroyed     | 实例销毁后调用，调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁                          |                                                              |
 
-## 父组件和子组件生命周期执行顺序
+## 父子组件生命周期执行顺序
 
 Vue 的父组件和子组件生命周期钩子函数执行顺序可以归类为以下四部分：
 

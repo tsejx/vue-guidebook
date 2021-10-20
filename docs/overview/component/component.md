@@ -1,12 +1,12 @@
 ---
 nav:
-  title: 用法
+  title: 基础
   order: 1
 group:
   title: 组件化
   order: 2
 title: 组件化
-order: 5
+order: 1
 ---
 
 # 组件化

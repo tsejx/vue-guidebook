@@ -1,7 +1,10 @@
 ---
 nav:
-  title: 原理
+  title: 架构
   order: 2
+group:
+  title: Vue2 架构
+  order: 5
 title: 虚拟 DOM
 order: 5
 ---
@@ -16,7 +19,7 @@ Virtual DOM 可以看做一棵模拟 DOM 树的 JavaScript 树，其主要是通
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/virtual-dom-base-model.png';
+import img from '../../assets/virtual-dom-base-model.png';
 
 export default () => <img alt="基于 Virtual DOM 的数据更新与 UI 同步机制" src={img} width={640} />;
 ```
@@ -25,7 +28,7 @@ export default () => <img alt="基于 Virtual DOM 的数据更新与 UI 同步�
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/virtual-dom-process.png';
+import img from '../../assets/virtual-dom-process.png';
 
 export default () => <img alt="Virtual DOM 处理过程" src={img} width={640} />;
 ```
@@ -92,7 +95,7 @@ patch 的核心 diff 算法，diff 算法通过同层的树节点进行比较而
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/old-and-new-diff.jpg';
+import img from '../../assets/old-and-new-diff.jpg';
 
 export default () => <img alt="old-vnode-and-new-vnode-diff" src={img} width={640} />;
 ```
@@ -161,7 +164,7 @@ oldStartVnode、oldEndVnode 与 newStartVnode、newEndVnode 两两比较共有�
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/virtual-dom-analysis.jpg';
+import img from '../../assets/virtual-dom-analysis.jpg';
 
 export default () => <img alt="Virtual DOM Analysis" src={img} width={640} />;
 ```
@@ -192,7 +195,7 @@ Vue 为平台做了一层适配层，不同平台之间通过适配层对外提�
 
 ```jsx | inline
 import React from 'react';
-import img from '../assets/virtual-dom.jpg';
+import img from '../../assets/virtual-dom.jpg';
 
 export default () => <img alt="Virtual DOM" src={img} width={640} />;
 ```
@@ -208,9 +211,7 @@ Virtual DOM 三个步骤：
 2. `diff(oldNode, newNode)`：对比新旧两棵虚拟树的区别，收集差异
 3. `patch`：将差异应用到真实 DOM 树
 
----
-
-**参考资料：**
+## 参考资料
 
 - [Vue 的 Virtual DOM 实现 - Snabbdom 解密](https://www.cnblogs.com/xuntu/p/6800547.html)
 - [Vue diff 算法 源码解析](https://juejin.im/post/5ccef5c76fb9a031fd635095)

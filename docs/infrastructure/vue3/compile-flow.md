@@ -1,15 +1,17 @@
 ---
 nav:
-  title: 原理
+  title: 架构
   order: 2
 group:
-  title: 代码编译
-  order: 2
+  title: Vue3 架构
+  order: 1
 title: 代码编译
-order: 1
+order: 20
 ---
 
 # 代码编译
+
+由 Vue 代码编译生成最终运行代码过程。
 
 ## 模版编译流程
 

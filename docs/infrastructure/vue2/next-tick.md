@@ -1,19 +1,25 @@
 ---
 nav:
-  title: 原理
+  title: 架构
   order: 2
 group:
-  title: 框架原理
-  order: 1
+  title: Vue2 架构
+  order: 5
 title: nextTick
-order: 4
+order: 3
 ---
 
 # nextTick
 
-阅读此章前假设已经理解 JavaScript 的 [事件循环机制](https://tsejx.github.io/JavaScript-Guidebook/core-modules/executable-code-and-execution-contexts/concurrency-model/event-loop.html)
+> 阅读此章前假设已经理解 JavaScript 的 [事件循环机制](https://tsejx.github.io/JavaScript-Guidebook/core-modules/executable-code-and-execution-contexts/concurrency-model/event-loop.html)
 
-> 在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
+**用法**：在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
+
+## 使用方式
+
+### 2.x 全局 API
+
+同步回调函数方式实现：
 
 ```js
 // 修改数据
@@ -24,7 +30,77 @@ Vue.nextTick(function () {
 });
 ```
 
+同步 Promise 方式实现:
+
+```js
+// 作为一个 Promise 使用 (2.1.0 起新增，详见接下来的提示)
+Vue.nextTick().then(function () {
+  // DOM 更新了
+});
+```
+
 尽管 MVVM 框架并不推荐直接操作 DOM，但有时候确实有这样的需求，尤其是和第三方插件进行配合的时候，免不了要进行 DOM 操作。而 `nextTick` 就提供了一个桥梁，确保我们操作的更新后的 DOM。
+
+### 2.x 实例方法
+
+它跟全局方法 `Vue.nextTick` 一样，不同的是回调的 `this` 自动绑定到调用它的实例上。
+
+```js
+new Vue({
+  // ...
+  methods: {
+    // ...
+    example: function () {
+      // 修改数据
+      this.message = 'changed';
+      // DOM 还没有更新
+      this.$nextTick(function () {
+        // DOM 现在更新了
+        // `this` 绑定到当前实例
+        this.doSomethingElse();
+      });
+    },
+  },
+});
+```
+
+### 3.x 响应式 API
+
+```js
+import { createApp, nextTick } from 'vue';
+
+const app = createApp({
+  setup() {
+    const message = ref('Hello!');
+    const changeMessage = async (newMessage) => {
+      message.value = newMessage;
+      await nextTick();
+      console.log('Now DOM is updated');
+    };
+  },
+});
+```
+
+### 3.x 实例方法
+
+```js
+createApp({
+  // ...
+  methods: {
+    // ...
+    example() {
+      // 修改数据
+      this.message = 'changed';
+      // DOM 尚未更新
+      this.$nextTick(function () {
+        // DOM 现在更新了
+        // `this` 被绑定到当前实例
+        this.doSomethingElse();
+      });
+    },
+  },
+});
+```
 
 ## 实现原理
 
@@ -137,6 +213,8 @@ Vue2.5+ 降级方案（由上至下）：
 3. setImmdediate（只有 IE 和 Node.js 支持）
 4. setTimeout（至少有 4ms 延迟，兜底方案）
 
+在 Vue3.x 中已经 `nextTick` 放弃兼容，直接使用 `Promise.resolve().then()`。
+
 ### flushCallbacks 函数
 
 ```js
@@ -161,8 +239,8 @@ function flushCallbacks() {
 2. microtask（微任务）因为其高优先级特性，能确保队列中的微任务在一次事件循环前被执行完毕
 3. 因为兼容性问题，Vue 不得不做 microtask（微任务）向 macrotask（宏任务）的降级方案
 
----
-
-**参考资料：**
+## 参考资料
 
 - [全面解析 Vue.nextTick 实现原理](https://mp.weixin.qq.com/s/ZbF_4o8XrJb49_MU6y3iDQ)
+- [Vue3 nextTick 原理分析](https://zhuanlan.zhihu.com/p/392234749)
+- [Vue3 源码阅读：nextTick 与调度器](https://www.bebopser.com/2021/01/22/vue3source6/#event-loop)

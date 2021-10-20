@@ -1,12 +1,12 @@
 ---
 nav:
-  title: 原理
+  title: 架构
   order: 2
 group:
-  title: 框架原理
-  order: 1
+  title: Vue2 架构
+  order: 5
 title: 生命周期
-order: 1
+order: 4
 ---
 
 # 生命周期
@@ -128,8 +128,6 @@ Vue 生命周期总结：
 6. 当 `vm._render` 执行的时候，所依赖的变量就会被求值，并被收集为依赖。按照 Vue 中 `watch.js` 的逻辑，当依赖的变量有变化时不仅仅回调函数被执行，实际上还要重新求值，即还要执行一遍。
 7. 如果还没有 preVnode 说明是首次渲染，直接创建真实 DOM。如果已经有了 prevVnode 说明不是首次渲染，那么就采用 patch 算法进行必要的 DOM 操作。这就是 Vue 更新 DOM 的逻辑。
 
----
-
-**参考资料：**
+## 参考资料
 
 - [📝 Vue 的响应式原理](https://github.com/answershuto/learnVue/blob/master/docs/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86.MarkDown)

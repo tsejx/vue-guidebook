@@ -1,12 +1,338 @@
 ---
 nav:
-  title: 用法
+  title: 基础
   order: 1
+group:
+  title: 组件化
+  order: 2
 title: 组件通信
-order: 6
+order: 4
 ---
 
 # 组件通信
+
+## Vue3 组件通信
+
+- `props`
+- `$emit`
+- `expose` / `ref`
+- `attrs`
+- `v-model`
+- `provide` / `inject`
+- Vuex
+
+### `props`
+
+用 `props` 传数据给子组件有两种方法。
+
+**方法一：混合写法**
+
+父组件
+
+```html
+<template>
+  <child :title="title" :desc="desc"></child>
+</template>
+<script>
+  import child from './child.vue';
+  import { ref, reactive } from 'vue';
+
+  export default {
+    data() {
+      return {
+        title: '标题',
+      };
+    },
+    setup() {
+      // 创建一个响应式数据
+
+      // 写法一：适用于基础类型  ref 还有其他用处，下面章节有介绍
+      const desc = ref('传递子组件的参数');
+
+      // 写法二：适用于引用类型（其实基础类型也行），如数组、对象
+      const desc = reactive(['传递子组件的参数']);
+
+      return {
+        desc,
+      };
+    },
+  };
+</script>
+```
+
+子组件
+
+```html
+<script>
+  export default {
+    // 如果这行不写，下面就接收不到
+    props: ['title', 'desc'],
+    setup(props) {
+      console.log(props);
+      // { title: "传递子组件的参数", desc: "传递子组件的参数" }
+    },
+  };
+</script>
+```
+
+**方法二：纯 Vue3 写法**
+
+父组件
+
+```html
+<template>
+  <child :title="title"></child>
+</template>
+<script setup>
+  import child from './child.vue';
+  import { ref, reactive } from 'vue';
+
+  const title = ref('传递子组件的参数');
+  // 或者复杂类型
+  const title = reactive(['传递子组件的参数']);
+</script>
+```
+
+子组件
+
+```html
+<script setup>
+  import { defineProps } from "vue"
+
+  const props = defineProps({
+      // 写法一
+      title: String
+      // 写法二
+      title:{
+          type:String,
+          default: ''
+      }
+  })
+  console.log(props)
+  // { title: "传递子组件的参数" }
+</script>
+```
+
+- 如果父组件是混合写法，子组件纯 Vue3.x 写法的话，是接收不到父组件里 `data` 的属性，只能接收到父组件里 `setup` 函数里传的属性
+- 如果父组件是纯 Vue3.x 写法，子组件混合写法，可以通过 `props` 接收到 `data` 和 `setup` 函数里的属性，但是子组件要是在 `setup` 里接收，同样只能接收到父组件中 `setup` 函数里的属性，接收不到 `data` 里的属性
+
+官方也说了，既然用了 Vue3.x，就不要写 Vue2.x 了，所以不推荐混合写法。下面的例子，一律只用纯 Vue3 的写法，就不写混合写法了。
+
+### `$emit`
+
+子组件派发事件
+
+```html
+<template>
+  <!-- 写法一 -->
+  <button @click="emit('onChildClick')">按钮</buttom>
+  <!-- 写法二 -->
+  <button @click="handleButtonClick">按钮</buttom>
+</template>
+<script setup>
+  // 方法一：适用于 Vue3.2 版本
+  import { defineEmits } from "vue"
+
+  // 对应写法一
+  const emit = defineEmits(["onChildClick"])
+  // 对应写法二
+  const handleButtonClick = ()=>{
+    emit("onChildClick", "这是发送给父组件的信息")
+  }
+
+  // 方法二：不适用于 Vue3.2版本，该版本 useContext() 已废弃
+  import { useContext } from "vue"
+  const { emit } = useContext()
+
+  const handleButtonClick = ()=>{
+    emit("onChildClick", "这是发送给父组件的信息")
+  }
+</script>
+```
+
+父组件响应事件
+
+```html
+<template>
+  <child @onChildClick="handleChildClick"></child>
+</template>
+<script setup>
+  import child from './child.vue';
+
+  const handleChildClick = (payload) => {
+    console.log(payload);
+    // 这是父组件收到的信息
+  };
+</script>
+```
+
+### `expose` 和 `ref`
+
+父组件获取子组件的属性或者调用子组件方法
+
+子组件
+
+```html
+<script setup>
+  // 方法一 适用于 Vue3.2 版本
+  import { defineExpose } from 'vue';
+  defineExpose({
+    title: '子组件标题',
+    handleTitleConsole() {
+      console.log('这是子组件的方法');
+    },
+  });
+
+  // 方法二 不适用于 Vue3.2 版本，该版本 useContext() 已废弃
+  import { useContext } from 'vue';
+  const ctx = useContext();
+  // 对外暴露属性方法等都可以
+  ctx.expose({
+    title: '这是子组件的属性',
+    handleTitleConsole() {
+      console.log('这是子组件的方法');
+    },
+  });
+</script>
+```
+
+父组件
+
+```html
+<template>
+  <child ref="childRef"></child>
+  <button @click="handleButtonClick">按钮</button>
+</template>
+<script setup>
+  import child from './child.vue';
+  import { ref } from 'vue';
+
+  const childRef = ref(null);
+
+  const handleButtonClick = () => {
+    console.log(childRef.value.title);
+    // 获取子组件对外暴露的属性
+
+    childRef.value.handleTitleConsole();
+    // 调用子组件对外暴露的方法
+  };
+</script>
+```
+
+### `attrs`
+
+`attrs` 包含父作用域除 `class` 和 `style` 除外的非 `props` 属性集合
+
+父组件
+
+```html
+<template>
+  <child :title="title" :desc="desc" content="内容"></child>
+</template>
+<script setup>
+  import child from './child.vue';
+  import { ref } from 'vue';
+
+  const title = ref('标题');
+  const desc = ref('描述');
+</script>
+```
+
+子组件
+
+```html
+<script setup>
+  import { defineProps, useContext, useAttrs } from 'vue';
+
+  const props = defineProps({
+    title: String,
+  });
+
+  // 方法一 适用于 Vue3.2 版本
+  const attrs = useAttrs();
+  console.log(attrs);
+  // { desc: "描述", content: "内容" }
+
+  // 方法二 不适用于 Vue3.2 版本，该版本 useContext() 已废弃
+  const ctx = useContext();
+  // 如果没有用 props 接收 title 的话就是 { title: "标题", desc: "描述", content: "内容" }
+  console.log(ctx.attrs);
+  // { desc: "描述", content: "内容" }
+</script>
+```
+
+### `v-model`
+
+可以支持多个数据双向绑定
+
+父组件
+
+```html
+<child v-model:key="key" v-model:value="value"></child>
+<script setup>
+  import child from './child.vue';
+  import { ref, reactive } from 'vue';
+
+  const key = ref('key');
+  const value = ref('value');
+</script>
+```
+
+子组件
+
+```html
+<template>
+  <button @click="handlerClick">按钮</button>
+</template>
+<script setup>
+  import { defineEmits, useContext } from 'vue';
+
+  // 方法一 适用于 Vue3.2版本
+  const emit = defineEmits(['key', 'value']);
+
+  // 方法二  不适用于 Vue3.2 版本，该版本 useContext() 已废弃
+  const { emit } = useContext();
+
+  // 用法
+  const handlerClick = () => {
+    emit('update:key', 'new key');
+    emit('update:value', 'new value');
+  };
+</script>
+```
+
+### `provide` 和 `inject`
+
+provide / inject 为依赖注入
+
+- `provide`：可以让我们指定想要提供给后代组件的数据或
+- `inject`：在任何后代组件中接收想要添加在这个组件上的数据，不管组件嵌套多深都可以直接拿来用
+
+父组件
+
+```html
+<script setup>
+  import { provide } from 'vue';
+
+  provide('title', '标题');
+</script>
+```
+
+子组件
+
+```html
+<script setup>
+  import { inject } from 'vue';
+  const title = inject('title');
+
+  console.log(title);
+  // '标题'
+</script>
+```
+
+### Vuex
+
+## Vue2 组件通信
 
 ## 父子通信
 
@@ -18,16 +344,16 @@ order: 6
 4. `$listeners` 和 `$attrs`
 5. `.sync`
 
-### `props` 和 `emit`
+### `props`
 
-props 以单向数据流的形式可以很好地实现父子组件间的通信。
+`props` 以单向数据流的形式可以很好地实现父子组件间的通信。
 
-所谓单向数据流：就是数据只能通过 props 由父组件流向子组件，而子组件并不能通过修改 props 传过来的数据修改父组件的相应状态。
+所谓单向数据流：就是数据只能通过 `props` 由父组件流向子组件，而子组件并不能通过修改 `props` 传过来的数据修改父组件的相应状态。
 
-> 所有的 prop 都使得其父子 prop 之间形成了一个单向下行绑定：父级 prop 的更新会向下流动到子组件中，但是反过来则不行。这样会防止从子组件意外改变父级组件的状态，从而导致你的应用的数据流向难以理解。
+> 所有的 `prop` 都使得其父子 `prop` 之间形成了一个单向下行绑定：父级 `prop` 的更新会向下流动到子组件中，但是反过来则不行。这样会防止从子组件意外改变父级组件的状态，从而导致你的应用的数据流向难以理解。
 
-- 父组件通过 props 传递参数给子组件
-- 子组件通过 emit 发射事件传递给父组件
+- 父组件通过 `props` 传递参数给子组件
+- 子组件通过 `emit` 发射事件传递给父组件
 
 ```js
 // 父组件
@@ -86,9 +412,13 @@ var app = new Vue({
 - 父组件传递数据 msg 给子组件，并通过 v-on 绑定 getChildData 事件来监听子组件的触发事件
 - 子组件通过 props 选项得到相关 msg 数据，并将数据缓存在 data 里，当属性数据值发生变化时，通过 `this.$emit` 触发父组件注册的 getChildData 事件处理数据逻辑
 
-### v-model
+### `$emit`
 
-v-model 是 props 和 emit 的语法糖，v-model 默认会解析成名为 value 的 props 和名为 input 的事件。
+> 🗑 在 Vue3 中，`$on`、`$off` 和 `$once` 实例方法已被移除，组件实例不再实现事件触发接口。
+
+### `v-model`
+
+`v-model` 是 `props` 和 `emit` 的语法糖，`v-model` 默认会解析成名为 `value` 的 `props` 和名为 `input` 的事件。
 
 ```html
 <!-- Parent Component -->
@@ -441,7 +771,7 @@ Vue.component('B', {
   },
   mounted() {
     //绑定全局事件globalEvent
-    this.$EventBus.$on('globalEvent', val => {
+    this.$EventBus.$on('globalEvent', (val) => {
       this.aMsg = val;
     });
   },
@@ -482,3 +812,4 @@ const app = new Vue({
 - [Vue 最佳实践](https://mp.weixin.qq.com/s/cVYtYWOB2mie-bjZmSw9AQ)
 - [Vue Patterns](https://github.com/learn-vuejs/vue-patterns)
 - [事件总线](https://juejin.im/post/5bb355dae51d450ea4020b42)
+- [Vue3 的 7 种和 Vue2 的 12 种组件通信方式](https://juejin.cn/post/6999941215043420191)

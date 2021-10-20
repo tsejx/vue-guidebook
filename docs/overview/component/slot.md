@@ -1,198 +1,184 @@
 ---
 nav:
-  title: 用法
+  title: 基础
   order: 1
-title: 插槽
-order: 3
+group:
+  title: 组件化
+  order: 2
+title: 插槽 Slot
+order: 5
 ---
 
-# 插槽
+# 插槽 Slot
 
-如何理解 Vue 组件中的 slot？
+Slot 又名插槽，是 Vue 的内容分发机制，组件内部的模板引擎使用 `<slot>` 元素标签作为承载分发内容的出口。插槽 `<slot>` 是子组件的一个模板标签元素，而这一个标签元素是否显示，以及如何显示是由父组件决定的。
 
-作者：HcySunYang
+通过插槽可以让用户可以拓展组件，去更好地复用组件和对其做定制化处理。如果父组件在使用到一个复用组件的时候，获取这个组件在不同的地方有少量的更改，如果去重写组件是一件不明智的事情。通过 `slot` 插槽向组件内部指定位置传递内容，完成这个复用组件在不同场景的应用：比如布局组件、表格列、下拉选、弹框显示内容等
 
-结论一：**插槽就是一个返回 VNode 的函数而已。**
+在 Vue 中插槽（Slot）的类型分为：
 
-结论二：**普通插槽和作用域插槽根本就没有区别，因为普通插槽就是作用域插槽的子集，这也是 Vue 为什么将二者合并的原因。**
+- **默认插槽**：又名匿名插槽，当 `slot` 没有指定 `name` 属性值的时候一个默认显示插槽，一个组件内只有一个匿名插槽
+- **具名插槽**：带有具体名字的插槽，也就是带有 `name` 属性的 `slot`，一个组件可以出现多个具名插槽
+- **作用域插槽**：默认插槽、具名插槽的一个变体，可以是匿名插槽，也可以是具名插槽，该插槽的不同点是在子组件渲染作用域插槽时，可以将子组件内部的数据传递给父组件，让父组件根据子组件的传递过来的数据决定如何渲染该插槽
 
-接下来我就证明给您看，希望能够真的让您理解插槽。不过开始之前我们需要达成一个共识，那就是组件的核心是什么？一句话：组件的核心是它能够产出一坨 VNode。对于 Vue 来说一个组件的核心就是它的渲染函数，组件的挂载本质就是执行渲染函数并得到要渲染的 VNode，至于什么 data/props/computed 这都是为渲染函数产出 VNode 过程中提供数据来源服务的，最最最最关键的就是组件最终产出的 VNode，因为这个才是要渲染的内容。
+三种插槽的具体使用指南请查阅 [内置组件 slot](../built-in-components/slot)
 
-这里备注一下：在 Vue 中我们习惯把虚拟 DOM 称为 VNode，它既可以代表一个 VNode 节点，也可以代表一颗 VNode 树。
+## 插槽指令
 
-回到正题，既然要说明 slot，那就必须有父子组件才行，所以接下来的例子设定是：在父组件中使用了子组件并传递了插槽给子组件。
+[Vue3 - v-slot 文档](https://v3.cn.vuejs.org/api/directives.html#v-slot)
 
-首先假设父组件的模板如下：
+`v-slot` 可放置在函数参数位置的 JavaScript 表达式。可选，即只需要在为插槽传入 `props` 的时候使用。
 
-```html
-<!-- 父组件模板 -->
-<MyComponent></MyComponent>
-```
+缩写：`#`
 
-我们在父组件中使用了一个叫做 MyComponent 的子组件，我们没有为子组件提供任何插槽，最终父组件的模板编译后得到的 render 函数可以表示为：
+适用限制：
+
+- `v-slot` 只能添加到 `<template>` 上，但在 **只有默认插槽** 时可以在组件标签上使用
+- 组件（对于一个单独的带 `props` 的默认插槽）
+
+⚠️ 注意：
+
+- 默认插槽名为 `default`，可以省略 `default` 直接写 `v-slot`
+- 默认插槽使用缩写为 `#` 时不能不写参数，写成 `#default`
+- 可以通过解构获取 `v-slot={userInfo}`，还可以重命名 `v-slot="{userInfo: <userInfoNewName>}"` 和定义默认值 `v-slot="{userInfo = <userDefaultInfo>}"`
+
+## 插槽属性
+
+[Vue3 - $slots 文档](https://v3.cn.vuejs.org/api/instance-properties.html#slots)
+
+`$slots` 用于以编程方式访问通过插槽分发的内容。每个具名插槽都有其相应的 property（例如：`v-slot:foo` 中的内容将会在 `this.$slots.foo()` 中被找到）。`default` property 包括了所有没有被包含在具名插槽中的节点，或 `v-slot:deafult` 的内容。
+
+在使用渲染函数编写一个组件时，访问 `this.$slots` 会很有帮助。
+
+## 实现原理
+
+slot 本质上是返回 VNode 的函数，一般情况下，Vue 中的组件要渲染到页面上需要经过 `template -> render function -> VNode -> DOM` 过程，这里看看 slot 如何实现：
+
+编写一个 `buttonCounter` 组件，使用匿名插槽。
 
 ```js
-render() {
-  return h('MyComponent')
+Vue.component('button-counter', {
+  template: '<div><slot>我是默认内容</slot></div>',
+});
+```
+
+使用该组件
+
+```js
+new Vue({
+  el: '#app',
+  template: '<button-counter><span>我是slot传入内容</span></button-counter>',
+  components: { buttonCounter },
+});
+```
+
+获取 `buttonCounter` 组件渲染函数。
+
+```js
+(function anonymous() {
+  with (this) {
+    return _c('div', [_t('default', [_v('我是默认内容')])], 2);
+  }
+});
+```
+
+`_v` 表示普通文本节点，`_t` 表示渲染插槽的函数。
+
+渲染插槽函数 `renderSlot`（做了简化）。
+
+```js
+function renderSlot(name, fallback, props, bindObject) {
+  // 得到渲染插槽内容的函数
+  var scopedSlotFn = this.$scopedSlots[name];
+  var nodes;
+  // 如果存在插槽渲染函数，则执行插槽渲染函数，生成nodes节点返回
+  // 否则使用默认值
+  nodes = scopedSlotFn(props) || fallback;
+  return nodes;
 }
 ```
 
-现在我们为子组件提供一个普通插槽：
+`name` 属性表示定义插槽的名字，默认值为 `default`，`fallback` 表示子组件中的 `slot` 节点的默认值。
 
-```html
-<!-- 父组件模板 -->
-<MyComponent>
-  <div></div>
-</MyComponent>
-```
-
-这是一个默认插槽，因为它没有名字。这时父组件编译后的渲染函数可以表示为：
+关于 `this.$scopredSlots` 是什么，我们可以先看看 `vm.$slots`。
 
 ```js
-render() {
-  return h('MyComponent', {
-    slots: {
-      default: h('div')
+function initRender (vm) {
+  ...
+  vm.$slots = resolveSlots(options._renderChildren, renderContext);
+  ...
+}
+```
+
+`resolveSlots` 函数会对 `children` 节点做归类和过滤处理，返回 `slots`。
+
+```js
+function resolveSlots(children, context) {
+  if (!children || !children.length) {
+    return {};
+  }
+  var slots = {};
+  for (var i = 0, l = children.length; i < l; i++) {
+    var child = children[i];
+    var data = child.data;
+    // remove slot attribute if the node is resolved as a Vue slot node
+    if (data && data.attrs && data.attrs.slot) {
+      delete data.attrs.slot;
     }
-  })
-}
-```
-
-在渲染器渲染如上 VNode 时，渲染器知道 MyComponent 是组件，所以会创建一个组件实例，在创建组件实例的时候，是能够拿到插槽数据的，也就是这个对象：
-
-```js
-slots: {
-  default: h('div')
-}
-```
-
-所以在创建实例的过程中我们可以把这个对象添加到组件实例上，这样子组件中就能够通过组件实例拿到从父组件中传递过来的 slots 数据，怎么拿呢？这么拿呗：`this.$slots.default`。
-
-子组件的实例创建完后，那就开始渲染子组件的内容呗，假设子组件的模板如下：
-
-```html
-<!-- 子组件模板 -->
-<section>
-  <slot />
-</section>
-```
-
-那么子组件的模板经过编译后，其渲染函数可以表示为：
-
-```js
-render() {
-  return h('section', this.$slot.default)
-}
-```
-
-看到了吧，你把这里的 `this.$slot.default` 替换成从父组件传递过来的数据，不就是：
-
-```js
-render() {
-  return h('section', h('div'))
-}
-```
-
-这样，渲染器就把父组件传递过来的 VNode 渲染成 `<section>` 标签的子节点了。至于具名插槽，那就把 `this.$slots.default` 中的 `default` 换成插槽的名称就行了，编译器是知道插槽的名称的，因为你都写在模板里了，例如：
-
-```html
-<section>
-  <slot name="xxoo">
-</section>
-```
-
-编译成的就是：
-
-```js
-render() {
-  return h('section', this.$slot.xxoo)
-}
-```
-
-至于作用域插槽，与普通插槽唯一的区别就是，编译器会把作用域插槽编译成函数，一个返回 VNode 的函数，而非像普通插槽一样直接编译成 VNode，假设父组件的模板是：
-
-```html
-<!-- 父组件模板 -->
-<MyComponent>
-  <div slot="xxoo" slot-scope="scopeData">
-    {{ scopeData.a }}
-  </div>
-</MyComponent>
-```
-
-则会把它编译成：
-
-```js
-render() {
-  return h('MyComponent', {
-    scopedSlots: {
-      xxoo: function(scopeData) {
-        return h('div', scopeData.a)
+    // named slots should only be respected if the vnode was rendered in the
+    // same context.
+    if ((child.context === context || child.fnContext === context) && data && data.slot != null) {
+      // 如果slot存在(slot="header") 则拿对应的值作为key
+      var name = data.slot;
+      var slot = slots[name] || (slots[name] = []);
+      // 如果是tempalte元素 则把template的children添加进数组中，这也就是为什么你写的template标签并不会渲染成另一个标签到页面
+      if (child.tag === 'template') {
+        slot.push.apply(slot, child.children || []);
+      } else {
+        slot.push(child);
       }
+    } else {
+      // 如果没有就默认是default
+      (slots.default || (slots.default = [])).push(child);
     }
-  })
+  }
+  // ignore slots that contains only whitespace
+  for (var name$1 in slots) {
+    if (slots[name$1].every(isWhitespace)) {
+      delete slots[name$1];
+    }
+  }
+  return slots;
 }
 ```
 
-同样的，在创建子组件实例的时候一样可以拿到 scopedSlots 数据，并把 scopedSlots 数据添加到组件实例对象上，所以在子组件的渲染函数中可以这样拿到作用域插槽要渲染的内容：
+`_render` 渲染函数通过 `normalizeScopedSlots` 得到 `vm.$scopedSlots`。
 
 ```js
-// 子组件的渲染函数
-render() {
-  return h('section', this.$scopedSlots.xxoo())
-}
+vm.$scopedSlots = normalizeScopedSlots(_parentVnode.data.scopedSlots, vm.$slots, vm.$scopedSlots);
 ```
 
-因为 `this.$scopedSlots.xxoo` 是一个函数，所以我们需要执行它，而正式因为它是函数所以才给了我们为它传递参数的机会，例如：
+作用域插槽中父组件能够得到子组件的值是因为在 `renderSlot` 的时候执行会传入 `props`，也就是上述 `_t` 第三个参数，父组件则能够得到子组件传递过来的值。
 
-```js
-// 子组件的渲染函数
-render() {
-  return h('section', this.$scopedSlots.xxoo({
-    a: this.a,
-    b: this.b
-  }))
-}
-```
+步骤：
 
-如上代码所示，我们传递了一个对象过去。这里是关键，大家注意，上面的代码是子组件的渲染函数，所以我们可以把子组件的数据传递过去，再回过头来看一下 xxoo 函数：
+1. 组件渲染过程：`template >> render function(RF) >> VNode >> DOM`
+2. 组件挂载实际上就是执行 RF 生成 VNode
+3. 解析父组件，给子组件插槽传入内容
+   1. 普通插槽：VNode，在 `this.$slots`
+   2. 作用域插槽：函数，接收自组件信息，返回 VNode
+4. 解析子组件，替换 `this.$slots.xxx` 或执行 `this.$scopeSLots.xxx`
 
-```js
-xxoo: function(scopeData) {
-        return h('div', scopeData.a)
-      }
-```
+Vue2.6.0 以后都是执行函数了
 
-这里的 scopeData 就是我们从子组件传递过来的对象，而 `scopeData.a` 就是子组件的数据，这就是作用域插槽的原理。
+1. 作用域插槽函数现在保证返回一个 VNode 数组，除非在返回值无效的情况下返回 `undefined`
+2. 所有的 `$slots` 现在都会作为函数暴露在 `$scopedSlots` 中。如果你在使用渲染函数，不论当前插槽是否带来作用域，我们都推荐始终通过 `$scopedSlots` 访问它们。这不仅仅使得在未来添加作用域变得简单，也可以让你最终轻松前一道所有插槽到都是函数的 Vue3
 
-现在我们来对比一下普通插槽和作用域插槽的区别：
+总结：当子组件 `vm` 实例化时，获取到父组件传入的 `slot` 标签的内容，存放在 `vm.$slot` 中，默认插槽为 `vm.$slot.default`，具名插槽为 `vm.$slot.<name>`，`<name>` 为插槽名，当组件执行渲染函数时候，遇到 `slot` 标签，使用 `$slot` 中的内容进行替换，此时可以为插槽传递数据，若存在数据，则可称该插槽为作用域插槽。
 
-```js
-// 普通插槽
-slots: {
-  xxoo: h('div')
-}
-// 作用域插槽
-scopedSlots: {
-  xxoo: (scopedData) => h('div', scopedData.a)
-}
-```
+## 参考资料
 
-实际上在 Vue2.6 之前，普通插槽的渲染作用域是在父组件，等到子组件拿到该插槽的时候，已经是渲染完的 vnode 了，所以是什么就展示什么。作用域插槽和普通插槽的区别在于，子组件拿到它的时候它还是一个函数，只有你执行该函数，它才会返回要渲染的内容(即 vnode)，所以就给了你在子组件中传递参数(子组件数据)过去的机会，同时由于该函数也能访问父组件作用域的数据，所以对于作用域插槽来说能同时展示父子组件的数据，这就是为什么我说普通插槽和作用域插槽的区分是一个伪区分，因为当你不给作用域插槽传递参数的时候，那它就是个普通插槽，我们完全可以把普通插槽也编译成函数，只是不传递参数罢了，例如：
-
-```js
-// 普通插槽
-slots: {
-  xxoo: () => h('div')
-}
-```
-
-这不就是所谓的作用域插槽吗，所以 vue2.6 把二者合并了，无论什么插槽，只要你是插槽你就是一个函数，然后老子在子组件中想怎么摆弄你就怎么摆弄你。
-
-另外，对于 v-slot，这仅仅是应用层的 api 设计，为了解决某些情况下造成的困惑而已，官方文档上贴出来的 RFC 已经说得很明白了，你就学学怎么用就行了，底层原理不会变得。。。
-
-最后表明，我上面的所写的内容不 100% 与 Vue 的实现一致，比如 Vue2.6 之前(2.6 之后的代码我没看)普通插槽的数据是存储在 children 中的，我这里把普通插槽的数据放到了 VNodeData(就是 h 函数的第二个参数) 的 slots 属性下。但是原理一样呀，如果你是框架设计者，你想把数据放哪你说了算。
-
-更新：上文中模板编译成的渲染函数只是示意，2.6 之前获取 slots 数据时有一个 resolve 的过程，但是如果讲出来就有点抓不住主题了，但请放心，绝对没有瞎说 ི。另外为什么强调 2.6 之前呢？因为 2.6 的改动我没看过呀～
-
-[Vue 组件化中 slot 的用法](https://juejin.im/post/5cc856a76fb9a0321141bc32)
+- [官方文档：插槽](https://v3.cn.vuejs.org/guide/component-slots.html)
+- [Vue 组件化中 slot 的用法](https://juejin.im/post/5cc856a76fb9a0321141bc32)
+- [如何理解 Vue.js 的组件中的 slot？](https://www.zhihu.com/question/37548226)
+- [Using templates and slots](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_templates_and_slots)

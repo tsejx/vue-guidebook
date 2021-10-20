@@ -1,15 +1,15 @@
 ---
 nav:
-  title: 原理
+  title: 架构
   order: 2
 group:
-  title: 框架原理
-  order: 1
-title: 批量更新
-order: 10
+  title: Vue2 架构
+  order: 5
+title: 批量更新策略
+order: 2
 ---
 
-# 批量更新
+# 批量更新策略
 
 Vue 修改视图的过程就是 `setter -> Dep -> Watcher -> patch -> View`。
 

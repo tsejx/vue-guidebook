@@ -11,4 +11,4 @@ order: 1
 
 # 模版语法
 
-[Vue 文档：模版语法](https://cn.vuejs.org/v2/guide/syntax.html)
+[Vue 文档：模版语法](https://v3.cn.vuejs.org/guide/template-syntax.html)
