@@ -5,7 +5,7 @@ const config = {
   base: '/vue-guidebook/',
   publicPath: '/vue-guidebook/',
   favicon: './favicon.ico',
-  logo: 'http://img.mrsingsing.com/vue-guidebook-logo.png',
+  logo: 'https://img.mrsingsing.com/vue-guidebook-logo.png',
   hash: true,
   exportStatic: {},
   theme: {
