@@ -5,11 +5,11 @@ nav:
 group:
   title: 基础概念
   order: 1
-title: 状态属性 Data
+title: 数据属性 Data
 order: 5
 ---
 
-# 状态属性 Data
+# 数据属性 Data
 
 相关官方文档：
 
