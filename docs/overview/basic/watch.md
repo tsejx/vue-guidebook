@@ -23,7 +23,7 @@ order: 6
 
 ## Options API 实现 Watch
 
-Options API 中的 `watch` 监听的数据必须时 `data` 中声明的或者父组件传递过来的 `props` 中的数据，当发生变化时，会触发其他操作。
+Options API 中的 `watch` 监听的数据必须是 `data` 中声明的或者父组件传递过来的 `props` 中的数据，当发生变化时，会触发其他操作。
 
 ### 普通的 watch
 
